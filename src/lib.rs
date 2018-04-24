@@ -6,6 +6,7 @@ pub enum Term {
     Id(String),
     Int(i64),
     Null,
+    String(String),
     Variable(String),
     Whitespace,
     Wildcard,
@@ -74,6 +75,10 @@ mod tests {
         Term::Variable(s.to_owned())
     }
 
+    fn string(s: &str) -> Term {
+        Term::String(s.to_owned())
+    }
+
     test_ts!(
         test_simple_word [
             "hi" => [ word("hi") ],
@@ -104,7 +109,8 @@ mod tests {
             "a,y" => [ word("a,y") ],
             "hi. you" => [ word("hi."), ws(), word("you") ],
             "hi1" => [ word("hi"), Int(1) ],
-            "hi.1" => [ word("hi"), Float(0.1) ]
+            "hi.1" => [ word("hi"), Float(0.1) ],
+            "#" => [ id("") ]
         ],
         test_coords [
             "($a, $b)" => [ word("("), var("a"), word(","), ws(), var("b"), word(")") ]
@@ -113,6 +119,11 @@ mod tests {
             "1 10 1.2" => [ Int(1), ws(), Int(10), ws(), Float(1.2) ],
             "0.1" => [ Float(0.1) ],
             ".1" => [ Float(0.1) ]
+        ],
+        test_strings [
+            "\"aay\"" => [ string("aay") ],
+            // "w\"" => [ word("w\"") ], FIXME SHOULD PANIC?
+            "w\"\"" => [ word("w"), string("") ]
         ]
     );
 

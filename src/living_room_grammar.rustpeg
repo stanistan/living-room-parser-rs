@@ -13,7 +13,20 @@ term -> Term
     = value / hole / id / variable / wildcard / ws / word
 
 value -> Term
-    = float / int / null / boolean
+    = float / int / null / boolean / string
+
+string -> Term
+    = "\"" s:$(!"\"" !"\n" .)* "\"" {
+        Term::String(s.to_owned())
+    }
+
+word -> Term
+    = w:$(word_pattern+) ![0-9] {
+        Term::Word(w.to_owned())
+    }
+    / w:$(word_char+) {
+        Term::Word(w.to_owned())
+    }
 
 int -> Term
     = "0" { Term::Int(0) }
@@ -41,21 +54,13 @@ boolean -> Term
     }
 
 id -> Term
-    = "#" w:$(alnum+) {
+    = "#" w:$(alnum*) {
         Term::Id(w.to_owned())
     }
 
 variable -> Term
     = "$" w:$(alnum+) {
         Term::Variable(w.to_owned())
-    }
-
-word -> Term
-    = w:$(word_pattern+) ![0-9] {
-        Term::Word(w.to_owned())
-    }
-    / w:$(word_char+) {
-        Term::Word(w.to_owned())
     }
 
 ws -> Term
@@ -75,7 +80,7 @@ wildcard -> Term
 
 alnum = digit / character
 word_delimiter = "$" / "#" / "_" / whitespace / digit
-word_char = [^# $ 0-9 _ .]
+word_char = [^# $ 0-9 _ . "]
 word_pattern = word_char+ "."+
 
 exp = ("e" / "E") ("-" / "+")? digit*<1,>
