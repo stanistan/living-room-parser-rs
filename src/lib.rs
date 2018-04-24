@@ -1,17 +1,18 @@
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 pub enum Term {
     Bool(bool),
-    Null,
+    Float(f64),
     Hole,
     Id(String),
-    Int(isize),
+    Int(i64),
+    Null,
     Variable(String),
     Whitespace,
     Wildcard,
     Word(String),
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 pub struct Terms(Vec<Term>);
 
 /// Construct a `Terms` struct-- this macro implicitly
@@ -100,10 +101,18 @@ mod tests {
         test_oddities [
             "a_" => [ word("a"), Hole ],
             ",,," => [ word(",,,") ],
-            "a,y" => [ word("a,y") ]
+            "a,y" => [ word("a,y") ],
+            "hi. you" => [ word("hi."), ws(), word("you") ],
+            "hi1" => [ word("hi"), Int(1) ],
+            "hi.1" => [ word("hi"), Float(0.1) ]
         ],
         test_coords [
-            "($a, $b)" => [ word("("), var("a"), word(","), Whitespace, var("b"), word(")") ]
+            "($a, $b)" => [ word("("), var("a"), word(","), ws(), var("b"), word(")") ]
+        ],
+        test_nums [
+            "1 10 1.2" => [ Int(1), ws(), Int(10), ws(), Float(1.2) ],
+            "0.1" => [ Float(0.1) ],
+            ".1" => [ Float(0.1) ]
         ]
     );
 

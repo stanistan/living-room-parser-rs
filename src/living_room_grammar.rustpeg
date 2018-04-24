@@ -13,12 +13,20 @@ term -> Term
     = value / hole / id / variable / wildcard / ws / word
 
 value -> Term
-    = int / null / boolean
+    = float / int / null / boolean
 
 int -> Term
     = "0" { Term::Int(0) }
     / s:$([-+]?[1-9]digit*) {
-        Term::Int(isize::from_str(s).unwrap())
+        Term::Int(i64::from_str(s).unwrap())
+    }
+
+float -> Term
+    = s:$( [-+]? digit* frac exp? ) {
+        Term::Float(f64::from_str(s).unwrap())
+    }
+    / s:$( [-+]? frac exp?) {
+        Term::Float(f64::from_str(s).unwrap())
     }
 
 null -> Term
@@ -43,7 +51,10 @@ variable -> Term
     }
 
 word -> Term
-    = w:$([^$# _\n\t]+) {
+    = w:$(word_pattern+) ![0-9] {
+        Term::Word(w.to_owned())
+    }
+    / w:$(word_char+) {
         Term::Word(w.to_owned())
     }
 
@@ -63,7 +74,12 @@ wildcard -> Term
     }
 
 alnum = digit / character
-word_delimiter = "$" / "#" / "_" / whitespace
+word_delimiter = "$" / "#" / "_" / whitespace / digit
+word_char = [^# $ 0-9 _ .]
+word_pattern = word_char+ "."+
+
+exp = ("e" / "E") ("-" / "+")? digit*<1,>
+frac = "." digit*<1,>
 
 whitespace = "\n" / " " / "\n\r" / "\t"
 digit = [0-9]
