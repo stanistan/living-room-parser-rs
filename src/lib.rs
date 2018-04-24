@@ -91,10 +91,10 @@ mod tests {
             "candy is null" => [ word("candy"), ws(), word("is"), ws(), Null ]
         ],
         test_vars [
-            "gorog is at $x $y but _ sometimes $" => [
+            "gorog is at $x $y but _ sometimes $ 1" => [
                 word("gorog"), ws(), word("is"), ws(), word("at"), ws(),
                 var("x"), ws(), var("y"), ws(), word("but"), ws(),
-                Hole, ws(), word("sometimes"), ws(), Wildcard
+                Hole, ws(), word("sometimes"), ws(), Wildcard, ws(), Int(1)
             ]
         ]
     );
