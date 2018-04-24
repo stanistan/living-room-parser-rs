@@ -12,40 +12,59 @@ pub parse -> Terms = ts:term* {
 term -> Term
     = value / hole / id / variable / wildcard / ws / word
 
-
 value -> Term
     = int / null / boolean
 
 int -> Term
     = "0" { Term::Int(0) }
-    / s:$([-+]?[1-9]digit*) { Term::Int(isize::from_str(s).unwrap()) }
+    / s:$([-+]?[1-9]digit*) {
+        Term::Int(isize::from_str(s).unwrap())
+    }
 
 null -> Term
     = "null" { Term::Null }
 
 boolean -> Term
-    = "true" { Term::Bool(true) }
-    / "false" { Term::Bool(false) }
+    = "true" {
+        Term::Bool(true)
+    }
+    / "false" {
+        Term::Bool(false)
+    }
 
 id -> Term
-    = "#" w:$(alnum+) { Term::Id(w.to_owned()) }
+    = "#" w:$(alnum+) {
+        Term::Id(w.to_owned())
+    }
 
 variable -> Term
-    = "$" w:$(alnum+) { Term::Variable(w.to_owned()) }
+    = "$" w:$(alnum+) {
+        Term::Variable(w.to_owned())
+    }
 
 word -> Term
-    = w:$(alnum+) { Term::Word(w.to_owned()) }
+    = w:$([^$# _\n\t]+) {
+        Term::Word(w.to_owned())
+    }
 
 ws -> Term
-    = " "+ { Term::Whitespace }
+    = whitespace+ {
+        Term::Whitespace
+    }
 
 hole -> Term
-    = "_" { Term::Hole }
-
+    = "_" {
+        Term::Hole
+    }
 
 wildcard -> Term
-    = "$" { Term::Wildcard }
+    = "$" {
+        Term::Wildcard
+    }
 
+alnum = digit / character
+word_delimiter = "$" / "#" / "_" / whitespace
+
+whitespace = "\n" / " " / "\n\r" / "\t"
 digit = [0-9]
 character = [a-zA-Z]
-alnum = digit / character

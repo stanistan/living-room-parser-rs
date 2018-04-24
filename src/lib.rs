@@ -96,6 +96,14 @@ mod tests {
                 var("x"), ws(), var("y"), ws(), word("but"), ws(),
                 Hole, ws(), word("sometimes"), ws(), Wildcard, ws(), Int(1)
             ]
+        ],
+        test_oddities [
+            "a_" => [ word("a"), Hole ],
+            ",,," => [ word(",,,") ],
+            "a,y" => [ word("a,y") ]
+        ],
+        test_coords [
+            "($a, $b)" => [ word("("), var("a"), word(","), Whitespace, var("b"), word(")") ]
         ]
     );
 
