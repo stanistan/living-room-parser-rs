@@ -1,0 +1,31 @@
+pub fact_or_pattern -> Terms = ts:term* {
+    Terms(ts)
+}
+
+ws -> Term
+    = " "+ { Term::Whitespace }
+
+null -> Term
+    = "null" { Term::Null }
+
+boolean -> Term
+    = "true" { Term::Bool(true) }
+    / "false" { Term::Bool(false) }
+
+value -> Term
+    = null / boolean
+
+digit = [0-9]
+character = [a-zA-Z]
+alnum = digit / character / ","
+
+word -> Term = w:$(alnum+) {
+    Term::Word(w.to_owned())
+}
+
+id -> Term = "#" w:$(alnum+) {
+    Term::Id(w.to_owned())
+}
+
+term -> Term
+    = value / id / word / ws

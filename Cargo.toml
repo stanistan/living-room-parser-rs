@@ -1,0 +1,10 @@
+[package]
+name = "parser-rs-wasm"
+version = "0.1.0"
+authors = ["Stan Rozenraukh <stan@stanistan.com>"]
+build = "build.rs"
+
+[dependencies]
+
+[build-dependencies]
+peg = { version = "0.5" }
