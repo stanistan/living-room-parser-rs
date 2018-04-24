@@ -4,8 +4,10 @@ pub enum Term {
     Null,
     Hole,
     Id(String),
+    Int(isize),
     Variable(String),
     Whitespace,
+    Wildcard,
     Word(String),
 }
 
@@ -26,6 +28,7 @@ macro_rules! ts {
 
 mod grammar {
     use super::{Term, Terms};
+    use std::str::FromStr;
     include!(concat!(env!("OUT_DIR"), "/living_room_grammar.rs"));
     #[allow(dead_code)]
     pub fn parse(s: &str) -> Result<Terms, ParseError> {
@@ -58,6 +61,10 @@ mod tests {
         }
     }
 
+    fn ws() -> Term {
+        Term::Whitespace
+    }
+
     fn word(s: &str) -> Term {
         Term::Word(s.to_owned())
     }
@@ -66,41 +73,32 @@ mod tests {
         Term::Id(s.to_owned())
     }
 
+    fn var(s: &str) -> Term {
+        Term::Variable(s.to_owned())
+    }
+
     test_ts!(
         test_simple_word [
-            "1" => [
-                word("1")
-            ],
-            "hi" => [
-                word("hi")
-            ],
-            "hi   you" => [
-                word("hi"),
-                Whitespace,
-                word("you")
-            ]
+            "hi" => [ word("hi") ],
+            "hi   you" => [ word("hi"), ws(), word("you") ]
         ],
         test_ids [
-            "#hi" => [
-                id("hi")
-            ]
+            "#hi" => [ id("hi") ]
         ],
         test_values [
-            "true" => [
-                Bool(true)
-            ],
-            "false" => [
-                Bool(false)
-            ],
-            "null" => [
-                Null
-            ],
-            "candy is null" => [
-                word("candy"),
-                Whitespace,
-                word("is"),
-                Whitespace,
-                Null
+            "0" => [ Int(0) ],
+            "1123" => [ Int(1123) ],
+            "-10" => [ Int(-10) ], "+1" => [ Int(1) ],
+            "true" => [ Bool(true) ],
+            "false" => [ Bool(false) ],
+            "null" => [ Null ],
+            "candy is null" => [ word("candy"), ws(), word("is"), ws(), Null ]
+        ],
+        test_vars [
+            "gorog is at $x $y but _ sometimes $" => [
+                word("gorog"), ws(), word("is"), ws(), word("at"), ws(),
+                var("x"), ws(), var("y"), ws(), word("but"), ws(),
+                Hole, ws(), word("sometimes"), ws(), Wildcard
             ]
         ]
     );

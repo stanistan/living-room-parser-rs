@@ -12,20 +12,31 @@ boolean -> Term
     = "true" { Term::Bool(true) }
     / "false" { Term::Bool(false) }
 
+int -> Term
+    = "0" { Term::Int(0) }
+    / s:$([-+]?[1-9]digit*) { Term::Int(isize::from_str(s).unwrap()) }
+
 value -> Term
-    = null / boolean
+    = int / null / boolean
 
 digit = [0-9]
 character = [a-zA-Z]
-alnum = digit / character / ","
+alnum = digit / character
 
-word -> Term = w:$(alnum+) {
-    Term::Word(w.to_owned())
-}
+word -> Term
+    = w:$(alnum+) { Term::Word(w.to_owned()) }
 
-id -> Term = "#" w:$(alnum+) {
-    Term::Id(w.to_owned())
-}
+hole -> Term
+    = "_" { Term::Hole }
+
+id -> Term
+    = "#" w:$(alnum+) { Term::Id(w.to_owned()) }
+
+variable -> Term
+    = "$" w:$(alnum+) { Term::Variable(w.to_owned()) }
+
+wildcard -> Term
+    = "$" { Term::Wildcard }
 
 term -> Term
-    = value / id / word / ws
+    = value / hole / id / variable / wildcard / ws / word
