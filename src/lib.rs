@@ -30,10 +30,6 @@ mod grammar {
     use super::{Term, Terms};
     use std::str::FromStr;
     include!(concat!(env!("OUT_DIR"), "/living_room_grammar.rs"));
-    #[allow(dead_code)]
-    pub fn parse(s: &str) -> Result<Terms, ParseError> {
-        fact_or_pattern(s)
-    }
 }
 
 #[cfg(test)]
