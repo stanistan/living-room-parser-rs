@@ -5,8 +5,8 @@
 // and the top first rule is the public/exported main
 // `parse` function.
 
-pub parse -> Terms = ts:term* {
-    Terms(ts)
+pub parse -> Vec<Term> = ts:term* {
+    ts
 }
 
 term -> Term

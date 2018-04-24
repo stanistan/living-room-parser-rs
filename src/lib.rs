@@ -39,24 +39,19 @@ impl Term {
     }
 }
 
-
-#[derive(Debug, PartialEq)]
-pub struct Terms(Vec<Term>);
-
-/// Construct a `Terms` struct-- this macro implicitly
-/// uses the `Term` enum variants, to make it simpler to
-/// write.
+/// this macro implicitly uses the `Term` enum variants, to make it simpler to
+/// write terms.
 #[allow(unused_macros)]
 macro_rules! ts {
     ($($t:expr),*) => {{
         #[allow(unused_imports)]
         use Term::*;
-        Terms(vec![$($t,)*])
+        vec![$($t,)*]
     }};
 }
 
 mod grammar {
-    use super::{Term, Terms};
+    use super::Term;
     use std::str::FromStr;
     include!(concat!(env!("OUT_DIR"), "/living_room_grammar.rs"));
 }
