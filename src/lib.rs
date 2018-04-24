@@ -1,3 +1,10 @@
+extern crate serde;
+#[macro_use] extern crate serde_derive;
+#[macro_use] extern crate serde_json;
+
+mod term_json;
+use term_json::ReprJSON;
+
 #[derive(Debug, PartialEq)]
 pub enum Term {
     Bool(bool),
@@ -12,6 +19,26 @@ pub enum Term {
     Wildcard,
     Word(String),
 }
+
+impl Term {
+    pub fn repr_json<'a>(&'a self) -> ReprJSON<'a> {
+        use Term::*;
+        match self {
+            Bool(ref b) => ReprJSON::bool_value(*b),
+            Float(ref f) => ReprJSON::float_value(*f),
+            Hole => ReprJSON::hole(),
+            Id(ref s) => ReprJSON::id(s),
+            Int(ref i) => ReprJSON::int_value(*i),
+            Term::Null => ReprJSON::null_value(),
+            String(ref s) => ReprJSON::string_value(s),
+            Variable(ref v) => ReprJSON::variable(v),
+            Term::Whitespace => ReprJSON::word(" "),
+            Term::Wildcard => ReprJSON::wildcard(),
+            Word(ref w) => ReprJSON::word(w),
+        }
+    }
+}
+
 
 #[derive(Debug, PartialEq)]
 pub struct Terms(Vec<Term>);
@@ -126,5 +153,55 @@ mod tests {
             "w\"\"" => [ word("w"), string("") ]
         ]
     );
+
+    macro_rules! to_json {
+        ($($e:expr),*) => {
+            serde_json::to_string(&vec![
+                $($e.repr_json()),*
+            ]).unwrap()
+        }
+    }
+
+    macro_rules! assert_json {
+        ([$($e:expr),*] => $t:tt) => {
+            assert_eq!(
+                format!("{}", json!($t)),
+                to_json!($($e),*)
+            );
+        }
+    }
+
+    #[test]
+    fn test_serialize_value() {
+        assert_json!(
+            [
+                Term::Bool(false),
+                Term::Float(10.0),
+                Term::Hole,
+                id("ay"),
+                Term::Int(123),
+                Term::Null,
+                string("hi"),
+                var("sup"),
+                ws(),
+                Term::Wildcard,
+                word("banana")
+            ]
+            =>
+            [
+                { "value": false },
+                { "value": 10.0 },
+                { "hole": true },
+                { "id": "ay" },
+                { "value": 123 },
+                { "value": null },
+                { "value": "hi" },
+                { "variable": "sup" },
+                { "word": " " },
+                { "wildcard": true },
+                { "word": "banana" }
+            ]
+        );
+    }
 
 }
