@@ -7,4 +7,4 @@ matrix:
               - 7
               - 8
               - 9
-          before_script: cd js
+          before_script: cd js && npm install
