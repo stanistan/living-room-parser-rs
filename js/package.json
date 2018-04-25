@@ -1,6 +1,7 @@
 {
     "name": "@stanistan/living-room-parser-rs",
     "author": "Stan Rozenraukh <stan@stanistan.com>",
+    "repository": "https://github.com/stanistan/living-room-parser-rs",
     "version": "0.1.0",
     "license": "MIT",
     "main": "index.js",
