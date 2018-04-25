@@ -10,6 +10,21 @@ extern crate serde;
 /// sense, but it's simpler to have *one* place to create these values and not
 /// have intermediate structs/representations in _this_ code when we can have
 /// `serde` take care of all of that.
+///
+/// Weird cases include:
+///
+/// 1. The `Null` variant should *always* have `value: None` which will get
+/// serialized to `null`.
+///
+/// 2. The `Hole` and `Wildcard` variants will just have `key` => `true`.
+///
+/// ---
+///
+/// You might be asking yourself, why not have the parser create `serde_json::Value`s
+/// directly as we do in the tests? This *might* be more light-weight specifically
+/// since it won't do any *heap* memory allocations as it borrows strings from the
+/// parser instead of copy/cloning them... specifically for the variants that hold
+/// strings.
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(untagged)]
 pub enum Term<'a> {
