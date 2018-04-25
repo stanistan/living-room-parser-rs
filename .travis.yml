@@ -1,0 +1,7 @@
+matrix:
+    include:
+        - language: rust
+          script: cargo test
+        - language: node
+          before_script: cd js
+          script: npm test
