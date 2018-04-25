@@ -1,6 +1,7 @@
 extern crate serde;
 #[macro_use] extern crate serde_derive;
-#[macro_use] extern crate serde_json;
+#[cfg(test)] #[macro_use] extern crate serde_json;
+#[cfg(not(test))] extern crate serde_json;
 
 /// The structure of the `Term` enum is symmetric to the representation of the
 /// parsed JSON structure that we want to fullfil the contract of the parser.
