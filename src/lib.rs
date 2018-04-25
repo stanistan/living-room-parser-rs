@@ -2,49 +2,38 @@ extern crate serde;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate serde_json;
 
-mod term_json;
-use term_json::ReprJSON;
-
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(untagged)]
 pub enum Term<'a> {
-    Bool(bool),
-    Float(f64),
-    Hole,
-    Id(&'a str),
-    Int(i64),
-    Null,
-    String(&'a str),
-    Variable(&'a str),
-    Whitespace,
-    Wildcard,
-    Word(&'a str),
-}
-
-impl <'a> Term<'a> {
-    pub fn repr_json(&'a self) -> ReprJSON<'a> {
-        use Term::*;
-        match self {
-            Bool(ref b) => ReprJSON::bool_value(*b),
-            Float(ref f) => ReprJSON::float_value(*f),
-            Hole => ReprJSON::hole(),
-            Id(ref s) => ReprJSON::id(s),
-            Int(ref i) => ReprJSON::int_value(*i),
-            Term::Null => ReprJSON::null_value(),
-            String(ref s) => ReprJSON::string_value(s),
-            Variable(ref v) => ReprJSON::variable(v),
-            Term::Whitespace => ReprJSON::word(" "),
-            Term::Wildcard => ReprJSON::wildcard(),
-            Word(ref w) => ReprJSON::word(w),
-        }
-    }
-}
-
-use serde::ser::{Serialize, Serializer};
-impl <'a> Serialize for Term<'a> {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where S: Serializer
-    {
-        self.repr_json().serialize(serializer)
+    Bool {
+        value: bool
+    },
+    Float {
+        value: f64
+    },
+    Hole {
+        hole: bool
+    },
+    Id {
+        id: &'a str
+    },
+    Int {
+        value: i64
+    },
+    Null {
+        value: Option<u8>
+    },
+    String {
+        value: &'a str
+    },
+    Variable {
+        variable: &'a str
+    },
+    Wildcard {
+        wildcard: bool
+    },
+    Word {
+        word: &'a str
     }
 }
 
@@ -60,8 +49,7 @@ mod tests {
     use super::*;
 
     fn parse_to_serde_value(s: &str) -> serde_json::Value {
-        let terms = grammar::parse(s).unwrap();
-        let parsed: Vec<_> = terms.iter().map(|s| s.repr_json()).collect();
+        let parsed = grammar::parse(s).unwrap();
         let parsed_as_json = serde_json::to_string(&parsed).unwrap();
         serde_json::from_str(&parsed_as_json).unwrap()
     }
@@ -182,17 +170,17 @@ mod tests {
 
         assert_json!(
             [
-                Term::Bool(false),
-                Term::Float(10.0),
-                Term::Hole,
-                Term::Id("ay"),
-                Term::Int(123),
-                Term::Null,
-                Term::String("hi"),
-                Term::Variable("sup"),
-                Term::Whitespace,
-                Term::Wildcard,
-                Term::Word("banana")
+                Term::Bool { value: false },
+                Term::Float { value: 10.0 },
+                Term::Hole { hole: true },
+                Term::Id { id: "ay" },
+                Term::Int { value: 123 },
+                Term::Null { value: None },
+                Term::String { value: "hi" },
+                Term::Variable { variable: "sup" },
+                Term::Word { word: " " },
+                Term::Wildcard { wildcard: true },
+                Term::Word { word: "banana" }
             ]
             =>
             [

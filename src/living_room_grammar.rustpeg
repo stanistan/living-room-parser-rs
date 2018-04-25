@@ -17,65 +17,65 @@ value -> Term<'input>
 
 string -> Term<'input>
     = "\"" s:$(!"\"" !"\n" .)* "\"" {
-        Term::String(s)
+        Term::String { value: s }
     }
 
 word -> Term<'input>
     = w:$(word_pattern+) ![0-9] {
-        Term::Word(w)
+        Term::Word { word: w }
     }
     / w:$(word_char+) {
-        Term::Word(w)
+        Term::Word { word: w }
     }
 
 int -> Term<'input>
-    = "0" { Term::Int(0) }
+    = "0" { Term::Int { value: 0 } }
     / s:$([-+]?[1-9]digit*) {
-        Term::Int(i64::from_str(s).unwrap())
+        Term::Int { value: i64::from_str(s).unwrap() }
     }
 
 float -> Term<'input>
     = s:$( [-+]? digit* frac exp? ) {
-        Term::Float(f64::from_str(s).unwrap())
+        Term::Float { value: f64::from_str(s).unwrap() }
     }
     / s:$( [-+]? frac exp?) {
-        Term::Float(f64::from_str(s).unwrap())
+        Term::Float { value: f64::from_str(s).unwrap() }
     }
 
 null -> Term<'input>
-    = "null" { Term::Null }
+    = "null" { Term::Null { value: None } }
 
 boolean -> Term<'input>
     = "true" {
-        Term::Bool(true)
+        Term::Bool { value: true }
     }
     / "false" {
-        Term::Bool(false)
+        Term::Bool { value: false }
     }
 
 id -> Term<'input>
     = "#" w:$(alnum*) {
-        Term::Id(w)
+        Term::Id { id: w }
     }
 
 variable -> Term<'input>
     = "$" w:$(alnum+) {
-        Term::Variable(w)
+        Term::Variable { variable: w }
     }
 
 ws -> Term<'input>
     = whitespace+ {
-        Term::Whitespace
+        Term::Word { word: " " }
     }
 
 hole -> Term<'input>
     = "_" {
-        Term::Hole
+        Term::Hole { hole: true }
     }
 
 wildcard -> Term<'input>
     = "$" {
-        Term::Wildcard
+        Term::Wildcard { wildcard: true }
     }
 
 alnum = digit / character
