@@ -6,22 +6,22 @@ mod term_json;
 use term_json::ReprJSON;
 
 #[derive(Debug, PartialEq)]
-pub enum Term {
+pub enum Term<'a> {
     Bool(bool),
     Float(f64),
     Hole,
-    Id(String),
+    Id(&'a str),
     Int(i64),
     Null,
-    String(String),
-    Variable(String),
+    String(&'a str),
+    Variable(&'a str),
     Whitespace,
     Wildcard,
-    Word(String),
+    Word(&'a str),
 }
 
-impl Term {
-    pub fn repr_json<'a>(&'a self) -> ReprJSON<'a> {
+impl <'a> Term<'a> {
+    pub fn repr_json(&'a self) -> ReprJSON<'a> {
         use Term::*;
         match self {
             Bool(ref b) => ReprJSON::bool_value(*b),
@@ -81,24 +81,24 @@ mod tests {
         }
     }
 
-    fn ws() -> Term {
+    fn ws<'a>() -> Term<'a> {
         Term::Whitespace
     }
 
     fn word(s: &str) -> Term {
-        Term::Word(s.to_owned())
+        Term::Word(s)
     }
 
     fn id(s: &str) -> Term {
-        Term::Id(s.to_owned())
+        Term::Id(s)
     }
 
     fn var(s: &str) -> Term {
-        Term::Variable(s.to_owned())
+        Term::Variable(s)
     }
 
     fn string(s: &str) -> Term {
-        Term::String(s.to_owned())
+        Term::String(s)
     }
 
     test_ts!(

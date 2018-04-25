@@ -5,36 +5,36 @@
 // and the top first rule is the public/exported main
 // `parse` function.
 
-pub parse -> Vec<Term> = ts:term* {
+pub parse -> Vec<Term<'input>> = ts:term* {
     ts
 }
 
-term -> Term
+term -> Term<'input>
     = value / hole / id / variable / wildcard / ws / word
 
-value -> Term
+value -> Term<'input>
     = float / int / null / boolean / string
 
-string -> Term
+string -> Term<'input>
     = "\"" s:$(!"\"" !"\n" .)* "\"" {
-        Term::String(s.to_owned())
+        Term::String(s)
     }
 
-word -> Term
+word -> Term<'input>
     = w:$(word_pattern+) ![0-9] {
-        Term::Word(w.to_owned())
+        Term::Word(w)
     }
     / w:$(word_char+) {
-        Term::Word(w.to_owned())
+        Term::Word(w)
     }
 
-int -> Term
+int -> Term<'input>
     = "0" { Term::Int(0) }
     / s:$([-+]?[1-9]digit*) {
         Term::Int(i64::from_str(s).unwrap())
     }
 
-float -> Term
+float -> Term<'input>
     = s:$( [-+]? digit* frac exp? ) {
         Term::Float(f64::from_str(s).unwrap())
     }
@@ -42,10 +42,10 @@ float -> Term
         Term::Float(f64::from_str(s).unwrap())
     }
 
-null -> Term
+null -> Term<'input>
     = "null" { Term::Null }
 
-boolean -> Term
+boolean -> Term<'input>
     = "true" {
         Term::Bool(true)
     }
@@ -53,27 +53,27 @@ boolean -> Term
         Term::Bool(false)
     }
 
-id -> Term
+id -> Term<'input>
     = "#" w:$(alnum*) {
-        Term::Id(w.to_owned())
+        Term::Id(w)
     }
 
-variable -> Term
+variable -> Term<'input>
     = "$" w:$(alnum+) {
-        Term::Variable(w.to_owned())
+        Term::Variable(w)
     }
 
-ws -> Term
+ws -> Term<'input>
     = whitespace+ {
         Term::Whitespace
     }
 
-hole -> Term
+hole -> Term<'input>
     = "_" {
         Term::Hole
     }
 
-wildcard -> Term
+wildcard -> Term<'input>
     = "$" {
         Term::Wildcard
     }
