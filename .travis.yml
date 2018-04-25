@@ -2,6 +2,6 @@ matrix:
     include:
         - language: rust
           script: cargo test
-        - language: node
+        - language: node_js
           before_script: cd js
           script: npm test
