@@ -1,0 +1,11 @@
+[package]
+name = "parser"
+version = "0.1.0"
+authors = ["Stan Rozenraukh <stan@stanistan.com>"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+stdweb = "0.4.4"
+living_room_parser = { path = "../" }

@@ -1,0 +1,13 @@
+{
+    "name": "@stanistan/living-room-parser-rs",
+    "author": "Stan Rozenraukh <stan@stanistan.com>",
+    "version": "0.1.0",
+    "license": "MIT",
+    "main": "index.js",
+    "devDependencies": {
+        "ava": "^0.25.0"
+    },
+    "scripts": {
+        "test": "ava tests/*"
+    }
+}

@@ -65,6 +65,17 @@ pub fn parse<'a>(input: &'a str) -> Result<Vec<Term<'a>>, grammar::ParseError> {
     grammar::parse(input)
 }
 
+#[inline(always)]
+pub fn parse_to_json_string(input: &str) -> Result<String, String> {
+    match parse(input) {
+        Err(e) => Err(format!("{}", e)),
+        Ok(ref parsed) => match serde_json::to_string(parsed) {
+            Err(e) => Err(format!("{}", e)),
+            Ok(s) => Ok(s)
+        }
+    }
+}
+
 mod grammar {
     use super::Term;
     use std::str::FromStr;

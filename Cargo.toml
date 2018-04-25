@@ -1,7 +1,10 @@
 [package]
-name = "parser-rs-wasm"
+name = "living_room_parser"
 version = "0.1.0"
 authors = ["Stan Rozenraukh <stan@stanistan.com>"]
+description = "A Rust implementation of the living-room parser"
+repository = "https://github.com/stanistan/living-room-parser-rs"
+license = "MIT"
 build = "build.rs"
 
 [dependencies]
