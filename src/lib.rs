@@ -2,6 +2,13 @@ extern crate serde;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate serde_json;
 
+/// The structure of the `Term` enum is symmetric to the representation of the
+/// parsed JSON structure that we want to fullfil the contract of the parser.
+///
+/// There are enum variants that in terms of a *type system* don't make that much
+/// sense, but it's simpler to have *one* place to create these values and not
+/// have intermediate structs/representations in _this_ code when we can have
+/// `serde` take care of all of that.
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(untagged)]
 pub enum Term<'a> {
