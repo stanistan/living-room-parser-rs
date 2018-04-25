@@ -60,6 +60,11 @@ pub enum Term<'a> {
     }
 }
 
+#[inline(always)]
+pub fn parse<'a>(input: &'a str) -> Result<Vec<Term<'a>>, grammar::ParseError> {
+    grammar::parse(input)
+}
+
 mod grammar {
     use super::Term;
     use std::str::FromStr;
