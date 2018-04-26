@@ -445,32 +445,32 @@ Module.STDWEB_PRIVATE.acquire_tmp = function( dummy ) {
 
     const __imports = {
         env: {
-            "__extjs_d53cec18d02fb719364be5a05a90d71e4ef4189b": function($0, $1) {
-                $1 = Module.STDWEB_PRIVATE.to_js($1);Module.STDWEB_PRIVATE.from_js($0, (function(){var callback = ($1); var wrapper = function (){if (! callback.dropped){callback ()}}; var nextTick ; if (typeof MutationObserver ==="function"){var node = document.createTextNode ("0"); var state = false ; new MutationObserver (wrapper). observe (node , {characterData : true}); nextTick = function (){state = ! state ; node.data = (state ? "1" : "0");};}else {var promise = Promise.resolve (null); nextTick = function (){promise.then (wrapper);};}nextTick.drop = function (){callback.dropped = true ; callback.drop ();}; return nextTick ;})());
+            "__extjs_dc2fd915bd92f9e9c6a3bd15174f1414eee3dbaf": function() {
+                console.error( 'Encountered a panic!' );
             },
-            "__extjs_ff5103e6cc179d13b4c7a785bdce2708fd559fc0": function($0) {
-                Module.STDWEB_PRIVATE.tmp = Module.STDWEB_PRIVATE.to_js( $0 );
+            "__extjs_fc52a58ca59f907dd0ac5c3478b1248029ae9b71": function($0) {
+                $0 = Module.STDWEB_PRIVATE.to_js($0);($0). drop ();
             },
             "__extjs_80d6d56760c65e49b7be8b6b01c1ea861b046bf0": function($0) {
                 Module.STDWEB_PRIVATE.decrement_refcount( $0 );
             },
-            "__extjs_fc52a58ca59f907dd0ac5c3478b1248029ae9b71": function($0) {
-                $0 = Module.STDWEB_PRIVATE.to_js($0);($0). drop ();
+            "__extjs_d53cec18d02fb719364be5a05a90d71e4ef4189b": function($0, $1) {
+                $1 = Module.STDWEB_PRIVATE.to_js($1);Module.STDWEB_PRIVATE.from_js($0, (function(){var callback = ($1); var wrapper = function (){if (! callback.dropped){callback ()}}; var nextTick ; if (typeof MutationObserver ==="function"){var node = document.createTextNode ("0"); var state = false ; new MutationObserver (wrapper). observe (node , {characterData : true}); nextTick = function (){state = ! state ; node.data = (state ? "1" : "0");};}else {var promise = Promise.resolve (null); nextTick = function (){promise.then (wrapper);};}nextTick.drop = function (){callback.dropped = true ; callback.drop ();}; return nextTick ;})());
+            },
+            "__extjs_a94847da281e0efb983dce68b7315dc4a7731c72": function($0) {
+                $0 = Module.STDWEB_PRIVATE.to_js($0);($0)();
+            },
+            "__extjs_72fc447820458c720c68d0d8e078ede631edd723": function($0, $1, $2) {
+                console.error( 'Panic location:', Module.STDWEB_PRIVATE.to_js_string( $0, $1 ) + ':' + $2 );
+            },
+            "__extjs_ff5103e6cc179d13b4c7a785bdce2708fd559fc0": function($0) {
+                Module.STDWEB_PRIVATE.tmp = Module.STDWEB_PRIVATE.to_js( $0 );
             },
             "__extjs_97495987af1720d8a9a923fa4683a7b683e3acd6": function($0, $1) {
                 console.error( 'Panic error message:', Module.STDWEB_PRIVATE.to_js_string( $0, $1 ) );
             },
             "__extjs_db0226ae1bbecd407e9880ee28ddc70fc3322d9c": function($0) {
                 $0 = Module.STDWEB_PRIVATE.to_js($0);Module.STDWEB_PRIVATE.unregister_raw_value (($0));
-            },
-            "__extjs_72fc447820458c720c68d0d8e078ede631edd723": function($0, $1, $2) {
-                console.error( 'Panic location:', Module.STDWEB_PRIVATE.to_js_string( $0, $1 ) + ':' + $2 );
-            },
-            "__extjs_dc2fd915bd92f9e9c6a3bd15174f1414eee3dbaf": function() {
-                console.error( 'Encountered a panic!' );
-            },
-            "__extjs_a94847da281e0efb983dce68b7315dc4a7731c72": function($0) {
-                $0 = Module.STDWEB_PRIVATE.to_js($0);($0)();
             },
             "__web_on_grow": function() {
                 const buffer = Module.instance.exports.memory.buffer;
