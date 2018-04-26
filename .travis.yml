@@ -5,4 +5,5 @@ matrix:
         - language: node_js
           node_js:
               - 9
-          before_script: cd js && npm install
+              - 10
+          before_script: cd js && make test
