@@ -6,4 +6,4 @@ matrix:
           node_js:
               - 9
               - 10
-          before_script: cd js/pkg && npm test
+          before_script: cd js/pkg && npm install
